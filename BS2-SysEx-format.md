@@ -1,10 +1,71 @@
+
+# Bass Station II System Exclusive Messages specifications
+
+## Summary
+
+Ref: https://www.midi.org/specifications/item/table-1-summary-of-midi-message
+
+A MIDI System Exclusive message has the following format:
+
+`N` is the number of bytes of bytes of the messages.
+
+| Offset | Data   | BS-II | Description                            |
+| ------:| ------:| -----:|:-------------------------------------- |
+|      0 |     F0 |    F0 | Mark the start of the SysEx message    | 
+|      1 |   _id_ |    00 | Manufacturer's ID                      |
+|      2 |   _id_ |    20 | Manufacturer's ID                      |
+|      3 |   _id_ |    29 | Manufacturer's ID                      |
+| 4.._N_-2 | _xx_ |       | sysex data (N-5 bytes)                 |
+|    _N_-1 |   F7 |    F7 | Mark the end of the SysEx message      |
+
+Note: "Japanese Group" manufacturers have only one ID byte. See [https://www.midi.org/specifications/item/manufacturer-id-numbers] for more details.
+
+## Details
+
+- **Offset**: index from the start of the SysEx data (first byte has offset=0)
+- **Bytes**: number of bytes to consider for this parameter
+- **Mask**: mask to apply to the above bytes to get the bits relative to the parameter
+- **Shift**: how many bits to shift the data to the right to get the real value
+- **Bits**: how many bits form the value
+- **Value**: range of values
+
+Example: TODO...
+
+| Offset | Bytes | Hex mask   | Bin mask            | Shift | Bits | Value    | Description                            |
+| ------:| -----:| ----------:| -------------------:| -----:|-----:|---------:|:-------------------------------------- |
+|      0 |     1 |       `FF` |          `11111111` |     0 |    8 |     0xF0 | start of sysex data                    |
+|      1 |     3 | `7F 7F 7F` |      3 * `01111111` |     0 |   24 | 0x002029 |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|     21 |     2 |    `03 7E` | `00000011 01111110` |     1 |    8 |   0..255 | Osc 1 fine                             |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |       |            |                     |       |      |          |                                        |
+|        |     1 |       `FF` |          `11111111` |     0 |    8 |     0xF7 | end of sysex data                      |
+
+
+
+
 ## Master
 
 Patch volume 100
 
 ## Oscillators
 
-Osc 1 fine              21, 2, [0x03 0x7e]
+              
 Osc 1 range             19, 2, [0x07 0x78]
 Osc 1 coarse            20, 2, [0x03 0x7c]
 Osc 1 waveform          18, 1, [0x60]
@@ -145,3 +206,4 @@ MIDI Chan
 Local 
 Tune
 Input Gain
+
