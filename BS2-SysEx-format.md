@@ -11,14 +11,44 @@ A MIDI System Exclusive message has the following format:
 
 | Offset | Data   | BS-II | Description                            |
 | ------:| ------:| -----:|:-------------------------------------- |
-|      0 |     F0 |    F0 | Mark the start of the SysEx message    | 
+|      0 |     F0 |       | Mark the start of the SysEx message    | 
 |      1 |   _id_ |    00 | Manufacturer's ID                      |
 |      2 |   _id_ |    20 | Manufacturer's ID                      |
 |      3 |   _id_ |    29 | Manufacturer's ID                      |
 | 4.._N_-2 | _xx_ |       | sysex data (N-5 bytes)                 |
-|    _N_-1 |   F7 |    F7 | Mark the end of the SysEx message      |
+|    _N_-1 |   F7 |       | Mark the end of the SysEx message      |
 
 Note: "Japanese Group" manufacturers have only one ID byte. See [https://www.midi.org/specifications/item/manufacturer-id-numbers] for more details.
+
+## Example
+    
+BS II SysEx Message in decimal:    
+    
+    240 000 032 041 000 051 000 000 000 000 000 000 000 000 001 000 
+    076 000 000 072 004 000 002 000 002 032 016 000 007 048 001 000
+    067 064 032 000 035 127 127 127 117 000 000 000 013 081 124 000
+    008 032 001 068 032 000 000 000 113 002 071 071 000 000 000 000
+    000 000 014 032 000 000 012 000 000 043 000 000 032 040 004 008
+    029 025 019 104 004 002 001 020 064 032 032 016 008 002 001 000
+    064 064 016 015 116 002 001 000 064 054 064 000 000 003 016 000
+    000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000
+    000 000 000 000 000 000 000 000 000 000 000 000 000 000 000 000
+    000 000 000 000 000 000 000 000 000 247 
+    
+BS II SysEx Message in hexadecimal:     
+     
+    f0 00 20 29 00 33 00 00 00 00 00 00 00 00 01 00 
+    4c 00 00 48 04 00 02 00 02 20 10 00 07 30 01 00
+    43 40 20 00 23 7f 7f 7f 75 00 00 00 0d 51 7c 00
+    08 20 01 44 20 00 00 00 71 02 47 47 00 00 00 00
+    00 00 0e 20 00 00 0c 00 00 2b 00 00 20 28 04 08
+    1d 19 13 68 04 02 01 14 40 20 20 10 08 02 01 00
+    40 40 10 0f 74 02 01 00 40 36 40 00 00 03 10 00
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    00 00 00 00 00 00 00 00 00 f7 
+
+
 
 ## Details
 
@@ -56,8 +86,65 @@ Example: TODO...
 |        |       |            |                     |       |      |          |                                        |
 |        |     1 |       `FF` |          `11111111` |     0 |    8 |     0xF7 | end of sysex data                      |
 
+## Ranges
+
+    osc
+        range   16'=00111111     63
+                 8'=01000000     64             
+                 4'=01000001     65
+                 2'=01000010     66
+                              
+        fine    min=00011011     27
+                max=11100100    228
+                   
+        coarse  min=00000000
+                max=11111111    127
+                
+        w.form  sin=00
+                tri=01
+                saw=10
+                pul=11
+                
+        pul.wi. min=0000000
+                max=1111111
+    
 
 
+## Two-bytes CC
+
+Value = 23
+
+    23 / 2 --> 11
+    23 % 2 --> 1 --> 64
+
+    MSB: 11 in binary = 00001011
+    LSB: 64 in binary = 01000000
+
+    shift MSB one bit to left and add LSB:
+    
+        00010110
+      + 00000001
+      ----------
+        00010111
+       
+    binary 00010111 = decimal 23        
+
+Value = 231                                  
+    
+    231 / 2 --> 115
+    231 % 2 --> 1 --> 64
+
+    MSB: 115 in binary = 01110011
+    LSB:  64 in binary = 01000000
+
+    shift MSB one bit to left and add LSB:
+    
+        11100110
+      + 00000001
+      ----------
+        11100111
+       
+    binary 11100111 = decimal 231       
 
 ## Master
 
