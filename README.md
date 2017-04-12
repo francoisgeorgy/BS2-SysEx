@@ -10,6 +10,7 @@ Manufacturer ID for Novation: `00H 20H 29H	Focusrite/Novation`
   - https://www.midi.org/specifications/item/the-midi-1-0-specification  
   - https://www.midi.org/specifications/category/reference-tables
 - Manufacturer MIDI ID Numbers: https://www.midi.org/specifications/item/manufacturer-id-numbers
+- http://www.personal.kent.edu/~sbirch/Music_Production/MP-II/MIDI/midi_system_exclusive_messages.htm
 
 ## Sysex description format
 
