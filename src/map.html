@@ -6,6 +6,7 @@
     <meta name="description" content="Novation Bass Station II SysEx Map">
     <meta name="author" content="francois.georgy@gmail.com">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="bs2-const.js?kc=1234"></script>
     <script src="bs2-sysex.js?kc=1234"></script>
     <style>
         #data {
@@ -74,7 +75,7 @@
             // 2: colorize according to the masks defined in BS2_SYSEX
             for (let i=0; i<BS2_SYSEX.length; i++) {
                 let color = COLORS[color_index++ % COLORS.length];
-                let masks = BS2_SYSEX[i].masks;
+                let masks = BS2_SYSEX[i].mask;
                 // count bits set in the mask(s):
                 let bit_sets = 0;
                 for (let k=0; k<masks.length; k++) {
@@ -122,12 +123,12 @@
             let data = new Uint8Array(BS2_SYSEX_LENGTH);
             for (let i=0; i<BS2_SYSEX.length; i++) {
                 let p = BS2_SYSEX[i];
-                for (let k=0; k<p.masks.length; k++) {
-                    if ((data[p.offset + k] & p.masks[k]) != 0) {
+                for (let k=0; k<p.mask.length; k++) {
+                    if ((data[p.offset + k] & p.mask[k]) != 0) {
                         console.log(`conflict at offset ${p.offset}`);
                         alert(`conflict at offset ${p.offset}`);
                     } else {
-                        data[p.offset + k] |= p.masks[k];
+                        data[p.offset + k] |= p.mask[k];
                     }
                 }
             }
