@@ -151,4 +151,3 @@ BS2_SYSEX = [
     }
 ];
 
-console.log("BS2_SYSEX defined");
