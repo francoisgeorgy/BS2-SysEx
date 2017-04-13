@@ -22,6 +22,8 @@ Note: "Japanese Group" manufacturers have only one ID byte. See [https://www.mid
 
 ## Example
     
+BS II SysEx length is 154 bytes.    
+    
 BS II SysEx Message in decimal:    
     
     240 000 032 041 000 051 000 000 000 000 000 000 000 000 001 000 
@@ -47,8 +49,6 @@ BS II SysEx Message in hexadecimal:
     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
     00 00 00 00 00 00 00 00 00 f7 
-
-
 
 ## Details
 

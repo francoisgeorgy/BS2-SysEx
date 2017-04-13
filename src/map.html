@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>BS2 SysEx Map</title>
+    <meta name="description" content="Novation Bass Station II SysEx Map">
+    <meta name="author" content="francois.georgy@gmail.com">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="bs2-sysex.js?kc=1234"></script>
+    <style>
+        #data {
+            font-family: Courier New, Courier, monospace;
+        }
+        .wrapper {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .wrapped-left {
+            flex:0;
+        }
+        .wrapped-middle {
+            flex:1;
+            margin-left: 50px;
+        }
+        .wrapped-right {
+            flex:2;
+            margin-left: 50px;
+        }
+        .wrapped-right > div {
+            margin-bottom: 1em;
+        }
+        .dump, .code {
+            white-space: pre;
+            color: #999;
+        }
+        span.highlight {
+            background-color: #00ccff;
+        }
+        span.dim {
+            color: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <h2>Novation Bass Station II SysEx Map</h2>
+    <hr />
+    <div id="data" class="code"></div>
+    <script>
+
+        const COLS = 8;
+        const EOL = '\n';
+        const COLORS = ['#00ff00', '#00ccff', '#ff6666'];
+//        const COLORS = ['red', 'yellow', 'blue'];
+
+        String.prototype.padZero = function(len, c) {
+            var s = '', c = c || '0', len = (len || 2) - this.length;
+            while (s.length < len) s += c;
+            return s + this;
+        }
+
+        function b(v) {
+            return v.toString(2).padZero(8);
+        }
+
+        function dim(s) {
+            return `<span class="dim">${s}</span>`;
+        }
+
+        /**
+         * value and mask must both be the same length (in bits)
+         * @param value
+         * @param mask
+         * @param color
+         * @returns {string}
+         */
+        function colorMask(value, mask, color) {
+            let s = '';
+            let m = b(mask);
+            let v = b(value);
+            for (let i=0; i<v.length; i++) {
+                if (m[i] == '1') {
+                    s += `<span style="color:#000;background-color:${color}">${v[i]}</span>`;
+                } else {
+                    s += v[i];
+                }
+            }
+            return s;
+        }
+
+        function findMask(offset) {
+            for (let i=0; i<BS2_SYSEX.length; i++) {
+                let p = BS2_SYSEX[i];
+                if (p.offset == offset) {
+                    return p.masks[0];
+                }
+                if ((offset > 0) && (p.offset == (offset-1)) && (p.masks.length == 2)) {
+                    return p.masks[1];
+                }
+            }
+            return -1;
+        }
+
+        function getBinRepr(data) {
+            let color_index = 0;
+            let s = '    ';
+            for (let i=0; i < 8; i++) {
+                s += `       ${dim(i)} `;
+            }
+            s += EOL;
+            let k = 0;
+            for (let i=0; i < data.byteLength; i++) {
+                if ((k % COLS) == 0) {
+                    s += dim(k.toString(10).padZero(3)) + ' ';
+                }
+                //s += b(data[i]) + ' ';
+                let m = findMask(i);
+                if (m >= 0) {
+                    s += colorMask(data[i], m, COLORS[color_index++ % COLORS.length]);
+                } else {
+                    s += b(data[i]);
+                }
+                s += ' ';
+                k++;
+                if ((k % COLS) == 0) {
+                    s += EOL;
+                }
+            }
+            return s;
+        }
+
+        $(function () {
+            let data = new Uint8Array(BS2_SYSEX_LENGTH);
+            for (let i=0; i<BS2_SYSEX.length; i++) {
+                let p = BS2_SYSEX[i];
+                for (let k=0; k<p.masks.length; k++) {
+                    if ((data[p.offset + k] & p.masks[k]) != 0) {
+                        console.log(`conflict at offset ${p.offset}`);
+                        alert(`conflict at offset ${p.offset}`);
+                    } else {
+                        data[p.offset + k] |= p.masks[k];
+                    }
+                }
+            }
+            $("#data").html(getBinRepr(data));
+        });
+    </script>
+</body>
+</html>

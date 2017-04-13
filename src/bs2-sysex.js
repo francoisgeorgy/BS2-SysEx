@@ -2,13 +2,17 @@
  * Bass Station II System Exclusive format
  */
 
-export const BS2_SYSEX = [
+
+/*export const */
+
+BS2_SYSEX_LENGTH = 154;
+BS2_SYSEX = [
     {
         offset: 0,
         bytes: 1,
         masks: [0xFF],
         shift: 0,
-        range: [0, 0],
+        range: [0xF0],
         description: "start of sysex data"
     }, {
         offset: 20,
@@ -137,6 +141,14 @@ export const BS2_SYSEX = [
     shift: 0,
     range: [0, 127],
     description: "LFO 2 Delay"
-}
-]
+},{
+        offset: 153,
+        bytes: 1,
+        masks: [0xFF],
+        shift: 0,
+        range: [0xF7],
+        description: "end of sysex data"
+    }
+];
 
+console.log("BS2_SYSEX defined");
