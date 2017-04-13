@@ -51,6 +51,15 @@
             return `<span class="dim">${s}</span>`;
         }
 
+        function count_set_bits(n) {
+            let count = 0; // count accumulates the total bits set
+            while(n != 0){
+                n &= (n-1); // clear the least significant bit set
+                count++;
+            }
+            return count;
+        }
+
         var color_index = 0;
 
         function getBinRepr(data) {
@@ -64,9 +73,20 @@
 
             // 2: colorize according to the masks defined in BS2_SYSEX
             for (let i=0; i<BS2_SYSEX.length; i++) {
-                let descr = $("<div>").text(BS2_SYSEX[i].description).html();
                 let color = COLORS[color_index++ % COLORS.length];
                 let masks = BS2_SYSEX[i].masks;
+                // count bits set in the mask(s):
+                let bit_sets = 0;
+                for (let k=0; k<masks.length; k++) {
+                    bit_sets += count_set_bits(masks[k]);
+                }
+                // we will display the description of the parameter:
+                let range = '';
+                if (BS2_SYSEX[i].range.length == 2) {
+                    range = `, ${BS2_SYSEX[i].range[0]}..${BS2_SYSEX[i].range[1]}`;
+                }
+                let descr = $("<div>").text(`${BS2_SYSEX[i].description}, ${bit_sets} bits${range}`).html();
+                // colorize the bits set:
                 for (let k=0; k<masks.length; k++) {
                     for (let b=1; b<=8; b++) {  // testing each bits
                         if ((masks[k] & (1<<(b-1))) != 0) {
