@@ -7,7 +7,8 @@
     <meta name="author" content="francois.georgy@gmail.com">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="bs2-const.js?kc=1234"></script>
-    <script src="bs2-sysex.js?kc=1234"></script>
+    <script src="bs2-sysex.js?kc=f1234"></script>
+    <script src="bs2-midi.js?kc=1234"></script>
     <style>
         #data {
             font-family: Courier New, Courier, monospace;
@@ -74,6 +75,9 @@
 
             // 2: colorize according to the masks defined in BS2_SYSEX
             for (let i=0; i<BS2_SYSEX.length; i++) {
+
+                if (!hasOwnProperty.call(BS2_SYSEX[i], 'mask')) continue;
+
                 let color = COLORS[color_index++ % COLORS.length];
                 let masks = BS2_SYSEX[i].mask;
                 // count bits set in the mask(s):
@@ -86,7 +90,10 @@
                 if (BS2_SYSEX[i].range.length == 2) {
                     range = `, ${BS2_SYSEX[i].range[0]}..${BS2_SYSEX[i].range[1]}`;
                 }
-                let descr = $("<div>").text(`${BS2_SYSEX[i].description}, ${bit_sets} bits${range}`).html();
+
+                let descr_text = hasOwnProperty.call(BS2_SYSEX[i], 'description') ? BS2_SYSEX[i].description : BS2_SYSEX[i].id;
+
+                let descr = $("<div>").text(`${descr_text}, ${bit_sets} bits${range}`).html();
                 // colorize the bits set:
                 for (let k=0; k<masks.length; k++) {
                     for (let b=1; b<=8; b++) {  // testing each bits
@@ -122,6 +129,9 @@
         $(function () {
             let data = new Uint8Array(BS2_SYSEX_LENGTH);
             for (let i=0; i<BS2_SYSEX.length; i++) {
+
+                if (!hasOwnProperty.call(BS2_SYSEX[i], 'mask')) continue;
+
                 let p = BS2_SYSEX[i];
                 for (let k=0; k<p.mask.length; k++) {
                     if ((data[p.offset + k] & p.mask[k]) != 0) {

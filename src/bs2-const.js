@@ -30,6 +30,7 @@ var BS2_PARAM = buildSet([
     'OSC2_ENV2_PW_MOD',
     'OSC2_LFO2_PW_MOD',
     'OSC2_MANUAL_PW',
+// Sub oscillator
     'SUB_OSC_OCT',
     'SUB_OSC_WAVE',
 // Mixer
