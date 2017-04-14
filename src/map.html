@@ -6,9 +6,7 @@
     <meta name="description" content="Novation Bass Station II SysEx Map">
     <meta name="author" content="francois.georgy@gmail.com">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="bs2-const.js?kc=1234"></script>
-    <script src="bs2-sysex.js?kc=f1234"></script>
-    <script src="bs2-midi.js?kc=1234"></script>
+    <script src="bs2.js?kc=1234"></script>
     <style>
         #data {
             font-family: Courier New, Courier, monospace;
@@ -74,32 +72,34 @@
             }
 
             // 2: colorize according to the masks defined in BS2_SYSEX
-            for (let i=0; i<BS2_SYSEX.length; i++) {
+            for (var prop in BS2.param) {
 
-                if (!hasOwnProperty.call(BS2_SYSEX[i], 'mask')) continue;
+                let param = BS2.param[prop];
+
+                if (!hasOwnProperty.call(param.sysex, 'mask')) continue;
 
                 let color = COLORS[color_index++ % COLORS.length];
-                let masks = BS2_SYSEX[i].mask;
+                let masks = param.sysex.mask;
+
                 // count bits set in the mask(s):
                 let bit_sets = 0;
                 for (let k=0; k<masks.length; k++) {
                     bit_sets += count_set_bits(masks[k]);
                 }
+
                 // we will display the description of the parameter:
                 let range = '';
-                if (BS2_SYSEX[i].range.length == 2) {
-                    range = `, ${BS2_SYSEX[i].range[0]}..${BS2_SYSEX[i].range[1]}`;
+                if (param.range.length == 2) {
+                    range = `, ${param.range[0]}..${param.range[1]}`;
                 }
+                let descr = $("<div>").text(`${param.description}, ${bit_sets} bits${range}`).html();
 
-                let descr_text = hasOwnProperty.call(BS2_SYSEX[i], 'description') ? BS2_SYSEX[i].description : BS2_SYSEX[i].id;
-
-                let descr = $("<div>").text(`${descr_text}, ${bit_sets} bits${range}`).html();
                 // colorize the bits set:
                 for (let k=0; k<masks.length; k++) {
                     for (let b=1; b<=8; b++) {  // testing each bits
                         if ((masks[k] & (1<<(b-1))) != 0) {
                             // bit is set in mask
-                            bin[BS2_SYSEX[i].offset + k][8-b] = `<span style="color:#000;background-color:${color}" title="${descr}">1</span>`;
+                            bin[param.sysex.offset + k][8-b] = `<span style="color:#000;background-color:${color}" title="${descr}">1</span>`;
                         }
                     }
                 }
@@ -127,21 +127,26 @@
         }
 
         $(function () {
-            let data = new Uint8Array(BS2_SYSEX_LENGTH);
-            for (let i=0; i<BS2_SYSEX.length; i++) {
+            
+            let data = new Uint8Array(BS2.meta.sysex_length);
 
-                if (!hasOwnProperty.call(BS2_SYSEX[i], 'mask')) continue;
+            for (var prop in BS2.param) {
 
-                let p = BS2_SYSEX[i];
-                for (let k=0; k<p.mask.length; k++) {
-                    if ((data[p.offset + k] & p.mask[k]) != 0) {
-                        console.log(`conflict at offset ${p.offset}`);
-                        alert(`conflict at offset ${p.offset}`);
+                if (!BS2.param.hasOwnProperty(prop)) continue;
+
+                let sysex = BS2.param[prop]['sysex'];
+                if (!hasOwnProperty.call(sysex, 'mask')) continue;
+
+                for (let k=0; k<sysex.mask.length; k++) {
+                    if ((data[sysex.offset + k] & sysex.mask[k]) != 0) {
+                        console.log(`conflict at offset ${sysex.offset}`);
+                        alert(`conflict at offset ${sysex.offset}`);
                     } else {
-                        data[p.offset + k] |= p.mask[k];
+                        data[sysex.offset + k] |= sysex.mask[k];
                     }
                 }
             }
+
             $("#data").html(getBinRepr(data));
 
             $("#data span").mouseover(function(){
@@ -150,6 +155,7 @@
             $("#data span").mouseout(function(){
                 $("#info").empty();
             });
+            
         });
     </script>
 </body>

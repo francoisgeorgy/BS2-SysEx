@@ -10,6 +10,7 @@ BS2_SYSEX = [ // the number of masks define the number of bytes, so the "bytes" 
         range: [0xF0],
         description: "start of sysex data"
     }, {
+        id: "SYSEX_END",
         offset: 153,
         mask: [0xFF],
         range: [0xF7],
@@ -260,12 +261,12 @@ BS2_SYSEX = [ // the number of masks define the number of bytes, so the "bytes" 
     }, {
         id: BS2_PARAM.LFO1_SYNC_VALUE,
         offset: 0,
-         
+
         range: []
     }, {
         id: BS2_PARAM.LFO2_SYNC_VALUE,
         offset: 0,
-         
+
         range: []
     },
     // Envelopes
@@ -321,9 +322,13 @@ BS2_SYSEX = [ // the number of masks define the number of bytes, so the "bytes" 
     // Effects
     {
         id: BS2_PARAM.FX_DISTORTION,
+        offset: 107,
+        masks: [0x0F, 0x70],
         range: []
     }, {
         id: BS2_PARAM.FX_OSC_FILTER_MOD,
+        offset: 106,
+        masks: [0x1F, 0x60],
         range: []
     },
     // Arpeggiator
