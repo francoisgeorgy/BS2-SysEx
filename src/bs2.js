@@ -447,7 +447,7 @@ BS2 = {
         },
         lfo1_sync_value: {
             description: "LFO1 Sync Value",
-            type: "cc",
+            type: "NRPN",
             cc: [87],
             range: [],
             sysex: {
@@ -457,7 +457,7 @@ BS2 = {
         },
         lfo2_sync_value: {
             description: "LFO2 Sync Value",
-            type: "cc",
+            type: "NRPN",
             cc: [91],
             range: [],
             sysex: {
@@ -918,6 +918,35 @@ BS2 = {
         }
         */
     }
-}
+};
 
 console.log(BS2);
+
+function CC_Map() {
+    let m = {};
+    for (var prop in BS2.param) {
+        let param = BS2.param[prop];
+        if (param.type != 'cc') continue;
+        if (param.cc.length == 1) {
+            m[param.cc[0]] = null;
+        } else {
+            m[param.cc[0]] = param.cc[1];
+        }
+    }
+    return m;
+}
+
+function CC_Names() {
+    let m = {};
+    for (var prop in BS2.param) {
+        let param = BS2.param[prop];
+        if (param.type != 'cc') continue;
+        if (param.cc.length == 1) {
+            m[param.cc[0]] = param.description;
+        } else {
+            let a = (param.cc[0] << 8) + param.cc[1];
+            m[(param.cc[0] << 8) + param.cc[1]] = param.description;
+        }
+    }
+    return m;
+}
