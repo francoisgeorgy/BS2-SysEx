@@ -610,18 +610,18 @@ BS2 = {
             cc: [],
             range: [],
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 79,
+                mask: [0x0A]    // todo: check
             }
         },
         arp_octaves: {
             description: "Arp Octaves",
             type: "cc",
             cc: [],
-            range: [],
+            range: [1, 4],
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 78,
+                mask: [0x14]
             }
         },
         pitch: {
@@ -644,285 +644,265 @@ BS2 = {
                 mask: []
             } */
         },
-        sustain: {
-            description: "Sustain",
-            type: "cc",
-            cc: [],
-            range: [],
-            sysex: {
-                offset: -1,
-                mask: []
-            }
-        },
-        after_touch: {
-            description: "After Touch",
-            type: "cc",
-            cc: [],
-            range: [],
-            sysex: {
-                offset: -1,
-                mask: []
-            }
-        },
         mod_wheel_lfo2_filter_freq: {
-            description: "Mod Wheel LFO2 Filter Freq",
+            description: "Mod Wheel LFO2 to Filter Freq",
             type: "cc",
             cc: [],
-            range: [],
+            range: [-63, 63],   // display goes to -64
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 84,
+                mask: [0x07,0x78]
             }
         },
         mod_wheel_lfo1_osc_pitch: {
-            description: "Mod Wheel LFO1 Osc Pitch",
+            description: "Mod Wheel LFO1 to Osc Pitch",
             type: "cc",
             cc: [],
-            range: [],
+            range: [-63, 63],   // display goes to -64
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 83,
+                mask: [0x0F,0x70]
             }
         },
         mod_wheel_osc2_pitch: {
             description: "Mod Wheel Osc2 Pitch",
             type: "cc",
             cc: [],
-            range: [],
+            range: [-63, 63],   // display goes to -64
+            sysex: {
+                offset: 85,
+                mask: [0x03,0x7C]
+            }
+        },
+        mod_wheel_filter_freq: {
+            description: "Mod Wheel Filter Freq",
+            type: "cc",
+            cc: [99, 98, 6],    // check. maybe this is the cc transmitted during the configuration of the parameter
+            range: [-64, 63],
+            sysex: {
+                offset: 82,
+                mask: [0x1F,0x60]
+            }
+        },
+        sustain: {
+            description: "Sustain",
+            type: "cc",
+            cc: [],
+            range: []   /*,
             sysex: {
                 offset: -1,
                 mask: []
-            }
+            } */
+        },
+        after_touch: {
+            description: "After Touch",
+            type: "cc",
+            cc: [],
+            range: []   /*,
+            sysex: {
+                offset: -1,
+                mask: []
+            } */
         },
         aftertouch_filter_freq: {
             description: "Aftertouch Filter Freq",
             type: "cc",
             cc: [],
-            range: [],
+            range: [-63, 63],   // display goes to -64
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 86,
+                mask: [0x01,0x7E]
             }
         },
         aftertouch_lfo1_to_osc_pitch: {
-            description: "Aftertouch LFO1 To Osc Pitch",
+            description: "Aftertouch LFO1 to Osc Pitch",
             type: "cc",
             cc: [],
-            range: [],
+            range: [-63, 63],   // display goes to -64
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 88,
+                mask: [0x7F]
             }
         },
         aftertouch_lfo2_speed: {
             description: "Aftertouch LFO2 Speed",
             type: "cc",
             cc: [],
-            range: [],
+            range: [-63, 63],   // display goes to -64
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 89,
+                mask: [0x3F,0x40]
             }
         },
         lfo_key_sync_lfo1: {
             description: "LFO Key Sync LFO1",
             type: "cc",
             cc: [],
-            range: [],
+            range: [0, 1],  // off, on
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 69,
+                mask: [0x10]
             }
         },
         lfo_key_sync_lfo2: {
             description: "LFO Key Sync LFO2",
             type: "cc",
             cc: [],
-            range: [],
+            range: [0, 1],  // off, on
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 76,
+                mask: [0x20]
             }
         },
         lfo_speed_sync_lfo1: {
             description: "LFO Speed Sync LFO1",
             type: "cc",
             cc: [],
-            range: [],
+            range: [0, 1],  // 0 = speed, 1 = sync
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 69,
+                mask: [0x08]
             }
         },
         lfo_speed_sync_lfo2: {
             description: "LFO Speed Sync LFO2",
             type: "cc",
             cc: [],
-            range: [],
+            range: [0, 1],  // 0 = speed, 1 = sync
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 76,
+                mask: [0x10]
             }
         },
         lfo_slew_lfo_1: {
             description: "LFO Slew LFO 1",
             type: "cc",
             cc: [],
-            range: [],
+            range: [0, 127],
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 65,
+                mask: [0x3F,0x40]
             }
         },
         lfo_slew_lfo_2: {
             description: "LFO Slew LFO 2",
             type: "cc",
             cc: [],
-            range: [],
+            range: [0, 127],
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 72,
+                mask: [0x7F]
             }
         },
-        osc_bend_amount: {
-            description: "Osc Bend Amount",
+        osc_pitch_bend_range: {
+            description: "Osc Pitch Bend Range",
             type: "cc",
             cc: [],
-            range: [],
+            range: [-12, 12],
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 16,
+                mask: [0x7F]        // to check
             }
         },
         osc_1_2_sync: {
             description: "Osc 1 2 Sync",
             type: "cc",
             cc: [],
-            range: [],
+            range: [0, 1],  // off, on
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 18,
+                mask: [0x40]
             }
         },
         velocity_amp_env: {
             description: "Velocity Amp Env",
             type: "cc",
             cc: [],
-            range: [],
+            range: [-63, 63],
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 49,
+                mask: [0x3F]
             }
         },
         velocity_mod_env: {
             description: "Velocity Mod Env",
             type: "cc",
             cc: [],
-            range: [],
+            range: [-63, 63],
             sysex: {
-                offset: -1,
-                mask: []
+                offset:56,
+                mask: [0x7E]
             }
         },
         vca_limit: {
-            description: "Vca Limit",
+            description: "VCA Limit",
             type: "cc",
             cc: [],
-            range: [],
+            range: [0, 127],
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 108,
+                mask: [0x07,0x78]
             }
         },
         arp_swing: {
             description: "Arp Swing",
             type: "cc",
             cc: [],
-            range: [],
+            range: [3, 97],
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 81,
+                mask: [0x6F,0x40]   // todo: check
             }
         },
         arp_seq_retrig: {
             description: "Arp Seq Retrig",
             type: "cc",
             cc: [],
-            range: [],
+            range: [0, 1],  // off, on
             sysex: {
-                offset: -1,
-                mask: []
+                offset: 77,
+                mask: [0x20]
             }
         },
         octave_key_transpose: {
             description: "Octave Key Transpose",
             type: "cc",
             cc: [],
-            range: [],
-            sysex: {
-                offset: -1,
-                mask: []
-            }
+            range: []
         },
         octave: {
             description: "Octave",
             type: "cc",
             cc: [],
-            range: [],
+            range: [-4, 5],
             sysex: {
-                offset: -1,
-                mask: []
-            }
-        },
-        other_mod: {
-            description: "Other Mod",
-            type: "cc",
-            cc: [],
-            range: [],
-            sysex: {
-                offset: -1,
-                mask: []
+                offset: 14,
+                mask: [0x01,0x78]   // to check
             }
         },
         global_midi_chan: {
             description: "Global Midi Chan",
             type: "cc",
             cc: [],
-            range: [],
-            sysex: {
-                offset: -1,
-                mask: []
-            }
+            range: []
         },
         global_local: {
             description: "Global Local",
             type: "cc",
             cc: [],
-            range: [],
-            sysex: {
-                offset: -1,
-                mask: []
-            }
+            range: []
         },
         global_tune: {
             description: "Global Tune",
             type: "cc",
             cc: [],
-            range: [],
-            sysex: {
-                offset: -1,
-                mask: []
-            }
+            range: []
         },
         global_input_gain: {
             description: "Global Input Gain",
             type: "cc",
             cc: [],
-            range: [],
-            sysex: {
-                offset: -1,
-                mask: []
-            }
+            range: []
         }
     }
 }
