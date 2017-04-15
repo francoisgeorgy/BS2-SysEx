@@ -1,4 +1,13 @@
 BS2 = {
+    _100: function (v) {
+        return v < 128 ? (v - 127) : (v - 128);
+    },
+    _12: function (v) {
+        //let a = v < 128 ? (v - 127) : (v - 128);
+        let a = 240 / 255 * v;
+        console.log('a', a);
+        return a;
+    },
     meta: {
         sysex_length: 154
     },
@@ -6,7 +15,7 @@ BS2 = {
         patch_volume: {
             description: "Patch Volume",
             type: "cc",
-            cc: [],
+            cc: [7],
             range: [],
             sysex: {
                 offset: 0,
@@ -16,17 +25,18 @@ BS2 = {
         osc1_fine: {
             description: "Osc1 Fine",
             type: "cc",
-            cc: [],
+            cc: [26, 58],
             range: [ -100, 100 ],
             sysex: {
                 offset: 22,
-                mask: [0x03,0x7E]
+                mask: [0x03,0x7E],
+                transform: v => BS2._100(v)
             }
         },
         osc1_range: {
             description: "Osc1 Range",
             type: "cc",
-            cc: [],
+            cc: [70],
             range: [ 63, 66 ],
             sysex: {
                 offset: 20,
@@ -36,17 +46,18 @@ BS2 = {
         osc1_coarse: {
             description: "Osc1 Coarse",
             type: "cc",
-            cc: [],
-            range: [ -12, 12 ],
+            cc: [27, 59],
+            range: [ -12.0, 12.0 ],
             sysex: {
                 offset: 21,
-                mask: [0x03,0x7C]
+                mask: [0x03,0x7C],
+                transform: v => BS2._12(v)
             }
         },
         osc1_waveform: {
             description: "Osc1 Waveform",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 72],
             range: [],
             sysex: {
                 offset: 19,
@@ -56,7 +67,7 @@ BS2 = {
         osc1_mod_env_depth: {
             description: "Osc1 Mod Env Depth",
             type: "cc",
-            cc: [],
+            cc: [71],
             range: [ -63, 63 ],
             sysex: {
                 offset: 98,
@@ -66,7 +77,7 @@ BS2 = {
         osc1_lfo1_depth: {
             description: "Osc1 LFO1 Depth",
             type: "cc",
-            cc: [],
+            cc: [28, 60],
             range: [ -127, 127 ],
             sysex: {
                 offset: 90,
@@ -76,7 +87,7 @@ BS2 = {
         osc1_mod_env_pw_mod: {
             description: "Osc1 Mod Env PW Mod",
             type: "cc",
-            cc: [],
+            cc: [72],
             range: [ -90, 90 ],
             sysex: {
                 offset: 101,
@@ -86,7 +97,7 @@ BS2 = {
         osc1_lfo2_pw_mod: {
             description: "Osc1 LFO2 PW Mod",
             type: "cc",
-            cc: [],
+            cc: [73],
             range: [ -90, 90 ],
             sysex: {
                 offset: 93,
@@ -96,7 +107,7 @@ BS2 = {
         osc1_manual_pw: {
             description: "Osc1 Manual PW",
             type: "cc",
-            cc: [],
+            cc: [74],
             range: [ 5, 95 ],
             sysex: {
                 offset: 19,
@@ -106,7 +117,7 @@ BS2 = {
         osc2_fine: {
             description: "Osc2 Fine",
             type: "cc",
-            cc: [],
+            cc: [29, 61],
             range: [ -100, 100 ],
             sysex: {
                 offset: 28,
@@ -116,7 +127,7 @@ BS2 = {
         osc2_range: {
             description: "Osc2 Range",
             type: "cc",
-            cc: [],
+            cc: [75],
             range: [ 63, 66 ],
             sysex: {
                 offset: 26,
@@ -126,7 +137,7 @@ BS2 = {
         osc2_coarse: {
             description: "Osc2 Coarse",
             type: "cc",
-            cc: [],
+            cc: [30, 62],
             range: [ -12, 12 ],
             sysex: {
                 offset: 27,
@@ -135,8 +146,8 @@ BS2 = {
         },
         osc2_waveform: {
             description: "Osc2 Waveform",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 82],
             range: [],
             sysex: {
                 offset: 24,
@@ -146,7 +157,7 @@ BS2 = {
         osc2_mod_env_depth: {
             description: "Osc2 Mod Env Depth",
             type: "cc",
-            cc: [],
+            cc: [76],
             range: [ -63, 63 ],
             sysex: {
                 offset: 99,
@@ -156,7 +167,7 @@ BS2 = {
         osc2_lfo1_depth: {
             description: "Osc2 LFO1 Depth",
             type: "cc",
-            cc: [],
+            cc: [31, 63],
             range: [ -127, 127 ],
             sysex: {
                 offset: 91,
@@ -166,18 +177,18 @@ BS2 = {
         osc2_env2_pw_mod: {
             description: "Osc2 Env2 PW Mod",
             type: "cc",
-            cc: [],
+            cc: [77],
             range: [ -90, 90 ],
-            transform: v => Math.trunc(180/127 * v) - 90,
             sysex: {
                 offset: 102,
-                mask: [0x01,0x7E]
+                mask: [0x01,0x7E],
+                transform: v => Math.trunc(180/127 * v) - 90
             }
         },
         osc2_lfo2_pw_mod: {
             description: "Osc2 LFO2 PW Mod",
             type: "cc",
-            cc: [],
+            cc: [78],
             range: [ -90, 90 ],
             sysex: {
                 offset: 94,
@@ -187,7 +198,7 @@ BS2 = {
         osc2_manual_pw: {
             description: "Osc2 Manual PW",
             type: "cc",
-            cc: [],
+            cc: [79],
             range: [ 5, 95 ],
             sysex: {
                 offset: 25,
@@ -197,7 +208,7 @@ BS2 = {
         sub_osc_oct: {
             description: "Sub Osc Oct",
             type: "cc",
-            cc: [],
+            cc: [81],
             range: [ 0, 0 ],
             sysex: {
                 offset: 37,
@@ -207,7 +218,7 @@ BS2 = {
         sub_osc_wave: {
             description: "Sub Osc Wave",
             type: "cc",
-            cc: [],
+            cc: [80],
             range: [],
             sysex: {
                 offset: 36,
@@ -217,7 +228,7 @@ BS2 = {
         mixer_osc_1_level: {
             description: "Mixer Osc 1 Level",
             type: "cc",
-            cc: [],
+            cc: [20, 52],
             range: [ 0, 255 ],
             sysex: {
                 offset: 37,
@@ -227,7 +238,7 @@ BS2 = {
         mixer_osc_2_level: {
             description: "Mixer Osc 2 Level",
             type: "cc",
-            cc: [],
+            cc: [21, 53],
             range: [],
             sysex: {
                 offset: 38,
@@ -237,14 +248,14 @@ BS2 = {
         mixer_sub_osc_level: {
             description: "Mixer Sub Osc Level",
             type: "cc",
-            cc: [],
+            cc: [22, 54],
             range: [ 0, 255 ],
             sysex: {
                 offset: 39,
                 mask: [0x01,0x7F]
             }
         },
-        mixer_select_noise_ring_ext: {
+        mixer_select_noise_ring_ext: {                      //TODO
             description: "Mixer Select Noise Ring Ext",
             type: "cc",
             cc: [],
@@ -257,7 +268,7 @@ BS2 = {
         mixer_noise_level: {
             description: "Mixer Noise Level",
             type: "cc",
-            cc: [],
+            cc: [23, 55],
             range: [],
             sysex: {
                 offset: 41,
@@ -267,7 +278,7 @@ BS2 = {
         mixer_ring_mod_level: {
             description: "Mixer Ring Mod Level",
             type: "cc",
-            cc: [],
+            cc: [24, 56],
             range: [],
             sysex: {
                 offset: 42,
@@ -277,7 +288,7 @@ BS2 = {
         mixer_external_signal_level: {
             description: "Mixer External Signal Level",
             type: "cc",
-            cc: [],
+            cc: [25, 57],
             range: [],
             sysex: {
                 offset: 43,
@@ -287,7 +298,7 @@ BS2 = {
         filter_type: {
             description: "Filter Type",
             type: "cc",
-            cc: [],
+            cc: [83],
             range: [],
             sysex: {
                 offset: 48,
@@ -297,7 +308,7 @@ BS2 = {
         filter_slope: {
             description: "Filter Slope",
             type: "cc",
-            cc: [],
+            cc: [106],
             range: [],
             sysex: {
                 offset: 48,
@@ -307,7 +318,7 @@ BS2 = {
         filter_shape: {
             description: "Filter Shape",
             type: "cc",
-            cc: [],
+            cc: [84],
             range: [],
             sysex: {
                 offset: 48,
@@ -317,7 +328,7 @@ BS2 = {
         filter_frequency: {
             description: "Filter Frequency",
             type: "cc",
-            cc: [],
+            cc: [16, 48],
             range: [ 0, 255 ],
             sysex: {
                 offset: 44,
@@ -327,7 +338,7 @@ BS2 = {
         filter_resonance: {
             description: "Filter Resonance",
             type: "cc",
-            cc: [],
+            cc: [82],
             range: [ 0, 127 ],
             sysex: {
                 offset: 45,
@@ -337,7 +348,7 @@ BS2 = {
         filter_mod_env_depth: {
             description: "Filter Mod Env Depth",
             type: "cc",
-            cc: [],
+            cc: [85],
             range: [ -63, 63 ],
             sysex: {
                 offset: 105,
@@ -347,7 +358,7 @@ BS2 = {
         filter_lfo2_depth: {
             description: "Filter LFO2 Depth",
             type: "cc",
-            cc: [],
+            cc: [17, 49],
             range: [ 0, 127 ],
             sysex: {
                 offset: 97,
@@ -357,7 +368,7 @@ BS2 = {
         filter_overdrive: {
             description: "Filter Overdrive",
             type: "cc",
-            cc: [],
+            cc: [114],
             range: [ 0, 127 ],
             sysex: {
                 offset: 46,
@@ -367,7 +378,7 @@ BS2 = {
         portamento_time: {
             description: "Portamento Time",
             type: "cc",
-            cc: [],
+            cc: [5],
             range: [],
             sysex: {
                 offset: 13,
@@ -377,7 +388,7 @@ BS2 = {
         lfo1_speed: {
             description: "LFO1 Speed",
             type: "cc",
-            cc: [],
+            cc: [18, 50],
             range: [ 0, 255 ],
             sysex: {
                 offset: 66,
@@ -387,7 +398,7 @@ BS2 = {
         lfo1_delay: {
             description: "LFO1 Delay",
             type: "cc",
-            cc: [],
+            cc: [86],
             range: [ 0, 127 ],
             sysex: {
                 offset: 64,
@@ -397,7 +408,7 @@ BS2 = {
         lfo2_speed: {
             description: "LFO2 Speed",
             type: "cc",
-            cc: [],
+            cc: [19, 51],
             range: [ 0, 255 ],
             sysex: {
                 offset: 73,
@@ -407,7 +418,7 @@ BS2 = {
         lfo2_delay: {
             description: "LFO2 Delay",
             type: "cc",
-            cc: [],
+            cc: [87],
             range: [ 0, 127 ],
             sysex: {
                 offset: 70,
@@ -417,7 +428,7 @@ BS2 = {
         lfo1_wave: {
             description: "LFO1 Wave",
             type: "cc",
-            cc: [],
+            cc: [88],
             range: [],
             sysex: {
                 offset: 63,
@@ -427,7 +438,7 @@ BS2 = {
         lfo2_wave: {
             description: "LFO2 Wave",
             type: "cc",
-            cc: [],
+            cc: [89],
             range: [],
             sysex: {
                 offset: 70,
@@ -437,7 +448,7 @@ BS2 = {
         lfo1_sync_value: {
             description: "LFO1 Sync Value",
             type: "cc",
-            cc: [],
+            cc: [87],
             range: [],
             sysex: {
                 offset: 0,
@@ -447,7 +458,7 @@ BS2 = {
         lfo2_sync_value: {
             description: "LFO2 Sync Value",
             type: "cc",
-            cc: [],
+            cc: [91],
             range: [],
             sysex: {
                 offset: 0,
@@ -457,7 +468,7 @@ BS2 = {
         amp_env_attack: {
             description: "Amp Env Attack",
             type: "cc",
-            cc: [],
+            cc: [90],
             range: [0, 127],
             sysex: {
                 offset: 50,
@@ -467,7 +478,7 @@ BS2 = {
         amp_env_decay: {
             description: "Amp Env Decay",
             type: "cc",
-            cc: [],
+            cc: [91],
             range: [0, 127],
             sysex: {
                 offset: 51,
@@ -477,7 +488,7 @@ BS2 = {
         amp_env_sustain: {
             description: "Amp Env Sustain",
             type: "cc",
-            cc: [],
+            cc: [92],
             range: [0, 127],
             sysex: {
                 offset: 52,
@@ -487,7 +498,7 @@ BS2 = {
         amp_env_release: {
             description: "Amp Env Release",
             type: "cc",
-            cc: [],
+            cc: [93],
             range: [0, 127],
             sysex: {
                 offset: 53,
@@ -496,8 +507,8 @@ BS2 = {
         },
         amp_env_triggering: {
             description: "Amp Env Triggering",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 73],
             range: [],
             sysex: {
                 offset: 55,
@@ -507,7 +518,7 @@ BS2 = {
         mod_env_attack: {
             description: "Mod Env Attack",
             type: "cc",
-            cc: [],
+            cc: [102],
             range: [0, 127],
             sysex: {
                 offset: 57,
@@ -517,7 +528,7 @@ BS2 = {
         mod_env_decay: {
             description: "Mod Env Decay",
             type: "cc",
-            cc: [],
+            cc: [103],
             range: [0, 127],
             sysex: {
                 offset: 58,
@@ -527,7 +538,7 @@ BS2 = {
         mod_env_sustain: {
             description: "Mod Env Sustain",
             type: "cc",
-            cc: [],
+            cc: [104],
             range: [0, 127],
             sysex: {
                 offset: 59,
@@ -537,7 +548,7 @@ BS2 = {
         mod_env_release: {
             description: "Mod Env Release",
             type: "cc",
-            cc: [],
+            cc: [105],
             range: [0, 127],
             sysex: {
                 offset: 60,
@@ -546,8 +557,8 @@ BS2 = {
         },
         mod_env_triggering: {
             description: "Mod Env Triggering",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 105],
             range: [],
             sysex: {
                 offset: 55,
@@ -557,7 +568,7 @@ BS2 = {
         fx_distortion: {
             description: "Fx Distortion",
             type: "cc",
-            cc: [],
+            cc: [94],
             range: [0, 127],
             sysex: {
                 offset: 107,
@@ -567,7 +578,7 @@ BS2 = {
         fx_osc_filter_mod: {
             description: "Fx Osc Filter Mod",
             type: "cc",
-            cc: [],
+            cc: [115],
             range: [],
             sysex: {
                 offset: 106,
@@ -577,7 +588,7 @@ BS2 = {
         arp_on: {
             description: "Arp On",
             type: "cc",
-            cc: [],
+            cc: [108],
             range: [0, 1],
             sysex: {
                 offset: 77,
@@ -587,7 +598,7 @@ BS2 = {
         arp_latch: {
             description: "Arp Latch",
             type: "cc",
-            cc: [],
+            cc: [109],
             range: [0, 1],
             sysex: {
                 offset: 77,
@@ -597,7 +608,7 @@ BS2 = {
         arp_rhythm: {
             description: "Arp Rhythm",
             type: "cc",
-            cc: [],
+            cc: [119],
             range: [1, 32],
             sysex: {
                 offset: 80,
@@ -607,7 +618,7 @@ BS2 = {
         arp_note_mode: {
             description: "Arp Note Mode",
             type: "cc",
-            cc: [],
+            cc: [118],
             range: [],
             sysex: {
                 offset: 79,
@@ -617,7 +628,7 @@ BS2 = {
         arp_octaves: {
             description: "Arp Octaves",
             type: "cc",
-            cc: [],
+            cc: [111],
             range: [1, 4],
             sysex: {
                 offset: 78,
@@ -637,7 +648,7 @@ BS2 = {
         mod: {
             description: "Mod",
             type: "cc",
-            cc: [],
+            cc: [0],
             range: []   /*,
             sysex: {
                 offset: -1,
@@ -646,8 +657,8 @@ BS2 = {
         },
         mod_wheel_lfo2_filter_freq: {
             description: "Mod Wheel LFO2 to Filter Freq",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 71],
             range: [-63, 63],   // display goes to -64
             sysex: {
                 offset: 84,
@@ -656,8 +667,8 @@ BS2 = {
         },
         mod_wheel_lfo1_osc_pitch: {
             description: "Mod Wheel LFO1 to Osc Pitch",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 70],
             range: [-63, 63],   // display goes to -64
             sysex: {
                 offset: 83,
@@ -666,8 +677,8 @@ BS2 = {
         },
         mod_wheel_osc2_pitch: {
             description: "Mod Wheel Osc2 Pitch",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 78],
             range: [-63, 63],   // display goes to -64
             sysex: {
                 offset: 85,
@@ -687,7 +698,7 @@ BS2 = {
         sustain: {
             description: "Sustain",
             type: "cc",
-            cc: [],
+            cc: [64],
             range: []   /*,
             sysex: {
                 offset: -1,
@@ -706,8 +717,8 @@ BS2 = {
         },
         aftertouch_filter_freq: {
             description: "Aftertouch Filter Freq",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 74],
             range: [-63, 63],   // display goes to -64
             sysex: {
                 offset: 86,
@@ -716,8 +727,8 @@ BS2 = {
         },
         aftertouch_lfo1_to_osc_pitch: {
             description: "Aftertouch LFO1 to Osc Pitch",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 75],
             range: [-63, 63],   // display goes to -64
             sysex: {
                 offset: 88,
@@ -726,8 +737,8 @@ BS2 = {
         },
         aftertouch_lfo2_speed: {
             description: "Aftertouch LFO2 Speed",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 76],
             range: [-63, 63],   // display goes to -64
             sysex: {
                 offset: 89,
@@ -736,8 +747,8 @@ BS2 = {
         },
         lfo_key_sync_lfo1: {
             description: "LFO Key Sync LFO1",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 89],
             range: [0, 1],  // off, on
             sysex: {
                 offset: 69,
@@ -746,8 +757,8 @@ BS2 = {
         },
         lfo_key_sync_lfo2: {
             description: "LFO Key Sync LFO2",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 93],
             range: [0, 1],  // off, on
             sysex: {
                 offset: 76,
@@ -756,8 +767,8 @@ BS2 = {
         },
         lfo_speed_sync_lfo1: {
             description: "LFO Speed Sync LFO1",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 87],
             range: [0, 1],  // 0 = speed, 1 = sync
             sysex: {
                 offset: 69,
@@ -766,8 +777,8 @@ BS2 = {
         },
         lfo_speed_sync_lfo2: {
             description: "LFO Speed Sync LFO2",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 91],
             range: [0, 1],  // 0 = speed, 1 = sync
             sysex: {
                 offset: 76,
@@ -776,8 +787,8 @@ BS2 = {
         },
         lfo_slew_lfo_1: {
             description: "LFO Slew LFO 1",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 86],
             range: [0, 127],
             sysex: {
                 offset: 65,
@@ -786,8 +797,8 @@ BS2 = {
         },
         lfo_slew_lfo_2: {
             description: "LFO Slew LFO 2",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [0, 90],
             range: [0, 127],
             sysex: {
                 offset: 72,
@@ -797,7 +808,7 @@ BS2 = {
         osc_pitch_bend_range: {
             description: "Osc Pitch Bend Range",
             type: "cc",
-            cc: [],
+            cc: [107],
             range: [-12, 12],
             sysex: {
                 offset: 16,
@@ -807,7 +818,7 @@ BS2 = {
         osc_1_2_sync: {
             description: "Osc 1 2 Sync",
             type: "cc",
-            cc: [],
+            cc: [110],
             range: [0, 1],  // off, on
             sysex: {
                 offset: 18,
@@ -817,7 +828,7 @@ BS2 = {
         velocity_amp_env: {
             description: "Velocity Amp Env",
             type: "cc",
-            cc: [],
+            cc: [112],
             range: [-63, 63],
             sysex: {
                 offset: 49,
@@ -827,7 +838,7 @@ BS2 = {
         velocity_mod_env: {
             description: "Velocity Mod Env",
             type: "cc",
-            cc: [],
+            cc: [113],
             range: [-63, 63],
             sysex: {
                 offset:56,
@@ -837,7 +848,7 @@ BS2 = {
         vca_limit: {
             description: "VCA Limit",
             type: "cc",
-            cc: [],
+            cc: [95],
             range: [0, 127],
             sysex: {
                 offset: 108,
@@ -847,7 +858,7 @@ BS2 = {
         arp_swing: {
             description: "Arp Swing",
             type: "cc",
-            cc: [],
+            cc: [116],
             range: [3, 97],
             sysex: {
                 offset: 81,
@@ -856,8 +867,8 @@ BS2 = {
         },
         arp_seq_retrig: {
             description: "Arp Seq Retrig",
-            type: "cc",
-            cc: [],
+            type: "NRPN",
+            cc: [106],
             range: [0, 1],  // off, on
             sysex: {
                 offset: 77,
@@ -879,7 +890,8 @@ BS2 = {
                 offset: 14,
                 mask: [0x01,0x78]   // to check
             }
-        },
+        }
+        /*,
         global_midi_chan: {
             description: "Global Midi Chan",
             type: "cc",
@@ -904,6 +916,7 @@ BS2 = {
             cc: [],
             range: []
         }
+        */
     }
 }
 
