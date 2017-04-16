@@ -128,9 +128,9 @@
                 s += ' final value: ';
 
                 let final_value = 0;
-                if (hasOwnProperty.call(param.sysex, 'transform')) {
+                if (hasOwnProperty.call(param, 'transform')) {
                     console.log('compute final value with transform function and raw_value=' + param_value);
-                    final_value = param.sysex.transform(param_value);
+                    final_value = param.transform(param_value);
                     console.log('final value', final_value);
                 }
 
