@@ -6,7 +6,7 @@
     <meta name="description" content="Novation Bass Station II SysEx Map">
     <meta name="author" content="francois.georgy@gmail.com">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="bs2.js?kc=1234"></script>
+    <script src="bs2.class.js?kc=1223434"></script>
     <style>
         #data {
             font-family: Courier New, Courier, monospace;
@@ -37,11 +37,13 @@
         const EOL = '\n';
         const COLORS = ['#00ff00', '#00ccff', '#ff6666'];
 
+        var sysex = null;   // global variable. Bad! but useful :-)
+
         String.prototype.padZero = function(len, c) {
             var s = '', c = c || '0', len = (len || 2) - this.length;
             while (s.length < len) s += c;
             return s + this;
-        }
+        };
 
         function b(v) {
             return v.toString(2).padZero(8);
@@ -72,14 +74,15 @@
             }
 
             // 2: colorize according to the masks defined in BS2_SYSEX
-            for (var prop in BS2.param) {
+            //for (let prop in BS2.param) {
+            for (let i=0; i < sysex.length; i++) {
 
-                let param = BS2.param[prop];
+                //let param = BS2.param[prop];
 
-                if (!hasOwnProperty.call(param.sysex, 'mask')) continue;
+                if (!sysex[i].hasOwnProperty('mask')) continue;
 
                 let color = COLORS[color_index++ % COLORS.length];
-                let masks = param.sysex.mask;
+                let masks = sysex[i].mask;
 
                 // count bits set in the mask(s):
                 let bit_sets = 0;
@@ -89,17 +92,18 @@
 
                 // we will display the description of the parameter:
                 let range = '';
-                if (param.range.length == 2) {
+                if (BS2.range.length == 2) {
                     range = `, ${param.range[0]}..${param.range[1]}`;
                 }
                 let descr = $("<div>").text(`${param.description}, ${bit_sets} bits${range}`).html();
+//                let descr = '';
 
                 // colorize the bits set:
                 for (let k=0; k<masks.length; k++) {
                     for (let b=1; b<=8; b++) {  // testing each bits
                         if ((masks[k] & (1<<(b-1))) != 0) {
                             // bit is set in mask
-                            bin[param.sysex.offset + k][8-b] = `<span style="color:#000;background-color:${color}" title="${descr}">1</span>`;
+                            bin[sysex[i].offset + k][8-b] = `<span style="color:#000;background-color:${color}" title="${descr}">1</span>`;
                         }
                     }
                 }
@@ -130,21 +134,22 @@
             
             let data = new Uint8Array(BS2.meta.sysex_length);
 
-            for (var prop in BS2.param) {
+            sysex = BS2.sysex;
+            for (let i=0; i<128; i++) {
 
-                if (!BS2.param.hasOwnProperty(prop)) continue;
+                if (typeof BS2.control[i] == 'undefined') continue;
+                /*
+                if (!sysex[i].hasOwnProperty('mask')) continue;
 
-                let sysex = BS2.param[prop]['sysex'];
-                if (!hasOwnProperty.call(sysex, 'mask')) continue;
-
-                for (let k=0; k<sysex.mask.length; k++) {
-                    if ((data[sysex.offset + k] & sysex.mask[k]) != 0) {
-                        console.log(`conflict at offset ${sysex.offset}`);
-                        alert(`conflict at offset ${sysex.offset}`);
+                for (let k=0; k<sysex[i].mask.length; k++) {
+                    if ((data[sysex[i].offset + k] & sysex[i].mask[k]) != 0) {
+                        console.log(`conflict at offset ${sysex[i].offset}`);
+                        alert(`conflict at offset ${sysex[i].offset}`);
                     } else {
-                        data[sysex.offset + k] |= sysex.mask[k];
+                        data[sysex[i].offset + k] |= sysex[i].mask[k];
                     }
                 }
+                */
             }
 
             $("#data").html(getBinRepr(data));
