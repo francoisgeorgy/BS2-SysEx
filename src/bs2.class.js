@@ -187,7 +187,6 @@ class BS2 {
     }
 
     static get control() {
-        console.log('create new control array');
         let control = new Array(127);
         control[BS2.control_id.patch_volume] = { // 7
             name: "Patch Volume",
@@ -761,7 +760,6 @@ class BS2 {
                 mask: [0x6F, 0x40]   // todo: check
             }
         };
-        console.log('return control');
         return control;
     }
 
