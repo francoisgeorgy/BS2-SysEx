@@ -6,7 +6,7 @@
     <meta name="description" content="Novation Bass Station II SysEx Map">
     <meta name="author" content="francois.georgy@gmail.com">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="bs2.class.js?kc=1223434"></script>
+    <script src="bs2.js?kc=1223434"></script>
     <style>
         #data {
             font-family: Courier New, Courier, monospace;
@@ -64,7 +64,46 @@
 
         var color_index = 0;
 
+
         function getBinRepr(data) {
+
+            function colorize(controls) {
+                // 2: colorize according to the masks defined in BS2 sysex info
+                for (let i=0; i < controls.length; i++) {
+
+                    if (typeof controls[i] == 'undefined') continue;
+                    if (!controls[i].hasOwnProperty('sysex')) continue;
+
+                    let sysex = controls[i].sysex;
+                    if (!sysex.hasOwnProperty('mask')) continue;
+
+                    let color = COLORS[color_index++ % COLORS.length];
+                    let masks = sysex.mask;
+
+                    // count bits set in the mask(s):
+                    let bit_sets = 0;
+                    for (let k=0; k<masks.length; k++) {
+                        bit_sets += count_set_bits(masks[k]);
+                    }
+
+                    // we will display the description of the parameter:
+                    let range = '';
+                    if (controls[i].range.length == 2) {
+                        range = `, ${controls[i].range[0]}..${controls[i].range[1]}`;
+                    }
+                    let descr = $("<div>").text(`${controls[i].name}, ${bit_sets} bits${range}`).html();
+
+                    // colorize the bits set:
+                    for (let k=0; k<masks.length; k++) {
+                        for (let b=1; b<=8; b++) {  // testing each bits
+                            if ((masks[k] & (1<<(b-1))) != 0) {
+                                // bit is set in mask
+                                bin[sysex.offset + k][8-b] = `<span style="color:#000;background-color:${color}" title="${descr}">1</span>`;
+                            }
+                        }
+                    }
+                }
+            }
 
             // 1: get a array of arrays of chars representing the binary values of the data.
             //    This will allow us to handle (colorize) each bit individually.
@@ -73,41 +112,8 @@
                 bin.push(b(data[i]).split(''));
             }
 
-            // 2: colorize according to the masks defined in BS2_SYSEX
-            //for (let prop in BS2.param) {
-            for (let i=0; i < sysex.length; i++) {
-
-                //let param = BS2.param[prop];
-
-                if (!sysex[i].hasOwnProperty('mask')) continue;
-
-                let color = COLORS[color_index++ % COLORS.length];
-                let masks = sysex[i].mask;
-
-                // count bits set in the mask(s):
-                let bit_sets = 0;
-                for (let k=0; k<masks.length; k++) {
-                    bit_sets += count_set_bits(masks[k]);
-                }
-
-                // we will display the description of the parameter:
-                let range = '';
-                if (BS2.range.length == 2) {
-                    range = `, ${param.range[0]}..${param.range[1]}`;
-                }
-                let descr = $("<div>").text(`${param.description}, ${bit_sets} bits${range}`).html();
-//                let descr = '';
-
-                // colorize the bits set:
-                for (let k=0; k<masks.length; k++) {
-                    for (let b=1; b<=8; b++) {  // testing each bits
-                        if ((masks[k] & (1<<(b-1))) != 0) {
-                            // bit is set in mask
-                            bin[sysex[i].offset + k][8-b] = `<span style="color:#000;background-color:${color}" title="${descr}">1</span>`;
-                        }
-                    }
-                }
-            }
+            colorize(BS2.control);
+            colorize(BS2.nrpn);
 
             // 3: format and add rows and columns headers
             let s = "    ";
@@ -130,27 +136,36 @@
             return s;
         }
 
+        /**
+         *
+         */
+        function validateAndInitData(controls, data) {
+            for (let i=0; i < controls.length; i++) {
+
+                if (typeof controls[i] == 'undefined') continue;
+                if (!controls[i].hasOwnProperty('sysex')) continue;
+
+                let sysex = controls[i].sysex;
+                if (!sysex.hasOwnProperty('mask')) continue;
+
+                for (let k=0; k<sysex.mask.length; k++) {
+                    if ((data[sysex.offset + k] & sysex.mask[k]) != 0) {
+                        console.log(`conflict at offset ${sysex.offset}`);
+                        alert(`conflict at offset ${sysex.offset}`);
+                    } else {
+                        data[sysex.offset + k] |= sysex.mask[k];
+                    }
+                }
+            }
+
+        }
+
         $(function () {
             
             let data = new Uint8Array(BS2.meta.sysex_length);
 
-            sysex = BS2.sysex;
-            for (let i=0; i<128; i++) {
-
-                if (typeof BS2.control[i] == 'undefined') continue;
-                /*
-                if (!sysex[i].hasOwnProperty('mask')) continue;
-
-                for (let k=0; k<sysex[i].mask.length; k++) {
-                    if ((data[sysex[i].offset + k] & sysex[i].mask[k]) != 0) {
-                        console.log(`conflict at offset ${sysex[i].offset}`);
-                        alert(`conflict at offset ${sysex[i].offset}`);
-                    } else {
-                        data[sysex[i].offset + k] |= sysex[i].mask[k];
-                    }
-                }
-                */
-            }
+            validateAndInitData(BS2.control, data);
+            validateAndInitData(BS2.nrpn, data);
 
             $("#data").html(getBinRepr(data));
 
@@ -160,7 +175,7 @@
             $("#data span").mouseout(function(){
                 $("#info").empty();
             });
-            
+
         });
     </script>
 </body>
