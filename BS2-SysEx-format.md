@@ -64,8 +64,6 @@ Example: TODO...
 | Offset | Bytes | Hex mask | Bin mask          | Bits | Description |
 | ------:| -----:| :------- | :---------------- | ----:| ----------- |
 |      0 |     1 |     `FF` |        `11111111` |    8 | start of sysex data                    |
-| Offset | Bytes | Hex mask | Bin mask          | Bits | Description |
-| ------:| -----:| :------- | :---------------- | ----:| ----------- |
 |     13 |     2 | `03 7C`    | `00000011 01111100` |    7 | Portamento Time |
 |     16 |     1 | `7F   `    | `01111111         ` |    7 | Osc Pitch Bend Range |
 |     18 |     1 | `40   `    | `01000000         ` |    1 | Osc 1 2 Sync |
