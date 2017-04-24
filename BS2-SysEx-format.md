@@ -55,14 +55,13 @@ BS II SysEx Message in hexadecimal:
 - **Offset**: index from the start of the SysEx data (first byte has offset=0)
 - **Bytes**: number of bytes to consider for this parameter
 - **Mask**: mask to apply to the above bytes to get the bits relative to the parameter
-- **Shift**: how many bits to shift the data to the right to get the real value
+- ~~**Shift**: how many bits to shift the data to the right to get the real value~~
 - **Bits**: how many bits form the value
-- **Value**: range of values
 
 Example: TODO...
 
 | Offset | Bytes | Hex mask | Bin mask          | Bits | Description |
-| ------:| -----:| :------- | :---------------- | ----:| ----------- |
+| ------:| -----:| :------- | :---------------- | ----:| :---------- |
 |      0 |     1 |     `FF` |        `11111111` |    8 | start of sysex data                    |
 |     13 |     2 | `03 7C`    | `00000011 01111100` |    7 | Portamento Time |
 |     16 |     1 | `7F   `    | `01111111         ` |    7 | Osc Pitch Bend Range |
@@ -141,7 +140,6 @@ Example: TODO...
 |    108 |     2 | `07 78`    | `00000111 01111000` |    7 | VCA Limit |
 |        |     1 |    `FF` |          `11111111` |   8 |     end of sysex data                      |
 
-
 ## Ranges
 
     osc
@@ -217,6 +215,15 @@ Example with value = 231
         11100111
        
     binary 11100111 = decimal 231       
+
+# Examples
+
+### Osc 1 Waveform
+
+
+
+### Osc 1 Fine
+
 
 ----
 
