@@ -61,6 +61,8 @@ Example: TODO...
 
 | Offset | Bytes | Hex mask | Bin mask          | Bits | Description |
 | ------:| -----:| :------- | :---------------- | ----:| ----------- |
+|      |     3 | `7F 7F 7F`    |  |     | Manufacturer ID |
+|      |     1 | `7F`    |  |     | Patch number |
 |     13 |     2 | `03 7C`    | `00000011 01111100` |    7 | Portamento Time |
 |     16 |     1 | `7F   `    | `01111111         ` |    7 | Osc Pitch Bend Range |
 |     18 |     1 | `40   `    | `01000000         ` |    1 | Osc 1 2 Sync |
@@ -139,6 +141,7 @@ Example: TODO...
 |    106 |     2 | `1F 60`    | `00011111 01100000` |    7 | Fx Osc Filter Mod |
 |    107 |     2 | `0F 70`    | `00001111 01110000` |    7 | Fx Distortion |
 |    108 |     2 | `07 78`    | `00000111 01111000` |    7 | VCA Limit |
+|      |     16 |     |  |     | Patch name (ASCII) |
   
 ### Values across bytes
 
