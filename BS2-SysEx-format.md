@@ -22,7 +22,7 @@ Note: "Japanese Group" manufacturers have only one ID byte. See [https://www.mid
 
 ## Example
     
-BS II SysEx length is 154 bytes.    
+BS II SysEx default length is 154 bytes. A patch may be smaller.
     
 BS II SysEx Message in decimal:    
     
@@ -52,7 +52,7 @@ BS II SysEx Message in hexadecimal:
 
 ## Format of the SysEx data sent by the Bass Station II
 
-- **Offset**: index from the start of the SysEx data (first byte has offset=0)
+- **Offset**: index from the start of the SysEx data. First byte (0xF0) has offset=0.
 - **Bytes**: number of bytes to consider for this parameter
 - **Mask**: mask to apply to the above bytes to get the bits relative to the parameter
 - **Bits**: how many bits form the value
@@ -142,8 +142,6 @@ Example: TODO...
   
 ### Values across bytes
 
--127..127:
-
 Example with Osc1 LFO1 Depth: 
 
     mask:   00011111 01110000
@@ -158,7 +156,7 @@ Example with Osc1 LFO1 Depth:
 
      rule: if msb==1 substract 128 else substract 127
 
-## SysEx messages understood by the Bass Stations II
+## SysEx messages understood by the Bass Station II
 
 | Message                       | Description |
 | ----------------------------- | ----------- |
