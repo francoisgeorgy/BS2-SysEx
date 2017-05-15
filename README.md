@@ -2,6 +2,8 @@
 
 Reverse engineering of the Novation Bass Station II SysEx format.
 
+See also my other project: [Bass Station II Web Interface](https://github.com/francoisgeorgy/BS2-Web)
+
 ## Summary
 
 Ref: https://www.midi.org/specifications/item/table-1-summary-of-midi-message
