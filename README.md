@@ -160,10 +160,12 @@ Let's decode the _Osc 1 Range_ value. The definition is:
 
 1. Take bytes 20 and 21 from the above example: 
 
+
     hex: 48 04
     bin: 01001000 01001000
 
 2. Apply masks:
+
 
     bin:  01001000 01001000
     mask: 00000111 01111000
@@ -171,6 +173,7 @@ Let's decode the _Osc 1 Range_ value. The definition is:
                000 01001
 
 3. Value
+
 
     value: 00001001 (bin) = 9 (dec)
 
