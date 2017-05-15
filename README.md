@@ -158,22 +158,19 @@ Let's decode the _Osc 1 Range_ value. The definition is:
 | ------:| -----:| :------- | :---------------- | ----:| ----------- |
 |     20 |     2 | `07 78`    | `00000111 01111000` |    7 | Osc 1 Range |
 
-1. Take bytes 20 and 21 from the above example: 
-
+Take bytes 20 and 21 from the above example: 
 
     hex: 48 04
-    bin: 01001000 01001000
+    bin: 01001000 01001000´´´
 
-2. Apply masks:
-
+Apply masks:
 
     bin:  01001000 01001000
     mask: 00000111 01111000
           -----------------
-               000 01001
+               000 01001
 
-3. Value
-
+Value:
 
     value: 00001001 (bin) = 9 (dec)
 
