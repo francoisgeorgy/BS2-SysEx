@@ -40,8 +40,8 @@ By default, the Bass Station II send 154 bytes. However, a patch (.syx file) may
 - **Mask**: mask to apply to the above bytes to get the bits relative to the parameter
 - **Bits**: how many bits form the value
 
-| Offset | Bytes | Hex mask | Bin mask          | Bits | Description |
-| ------:| -----:| :------- | :---------------- | ----:| ----------- |
+| Offset | Bytes | Hex mask   | Bin mask            | Bits | Description |
+| ------:| -----:| :--------- | :------------------ | ----:| ----------- |
 |      1 |     3 | `7F 7F 7F` | `01111111 01111111 01111111` | 3x 8 | Manufacturer ID |
 |      9 |     1 | `7F`       | `01111111         ` |    8 | Patch number |
 |     13 |     2 | `03 7C`    | `00000011 01111100` |    7 | Portamento Time |
@@ -124,6 +124,14 @@ By default, the Bass Station II send 154 bytes. However, a patch (.syx file) may
 |    108 |     2 | `07 78`    | `00000111 01111000` |    7 | VCA Limit |
 |    137 |    16 | 16x `0x7F`  | 16x `01111111` | 16x 8 | Patch name (16 ASCII chars) |
  
+#### Notes:
+ 
+For multiple bytes value:
+
+- The first byte in the dump is the MSB, _**M**ost **S**ignificant **B**yte_. 
+- The second byte in the dump is the LSB, _**LM**east **S**ignificant **B**yte_.
+- The _msb_ (most significant __bit__) of any byte is always **0**. 
+ 
 ## Example
         
 BS II SysEx Message in decimal:    
@@ -152,18 +160,19 @@ BS II SysEx Message in hexadecimal:
     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
     00 00 00 00 00 00 00 00 00 f7 
 
+
 ## Decoding example
 
 Let's decode the _Osc 1 Range_ value. The definition is:
 
-| Offset | Bytes | Hex mask | Bin mask          | Bits | Description |
-| ------:| -----:| :------- | :---------------- | ----:| ----------- |
-|     20 |     2 | `07 78`    | `00000111 01111000` |    7 | Osc 1 Range |
+| Offset | Bytes | Hex mask | Bin mask            | Bits | Description |
+| ------:| -----:| :------- | :------------------ | ----:| ----------- |
+|     20 |     2 | `07 78`  | `00000111 01111000` |    7 | Osc 1 Range |
 
 Take bytes 20 and 21 from the above example: 
 
     hex: 48 04
-    bin: 01001000 01001000´´´
+    bin: 01001000 01001000
 
 Apply masks:
 
@@ -174,7 +183,61 @@ Apply masks:
 
 Value:
 
-    value: 00001001 (bin) = 9 (dec)
+    value: 00001001 (bin) == 9 (dec)
+
+
+## Encoding example
+
+Let's encode the _Osc 1 Range_ value. The definition is:
+
+| Offset | Bytes | Hex mask | Bin mask            | Bits | Description |
+| ------:| -----:| :------- | :------------------ | ----:| ----------- |
+|     20 |     2 | `07 78`  | `00000111 01111000` |    7 | Osc 1 Range |
+
+The value we want to encode is 91:
+ 
+    91 (dec) == 01011011 (bin) 
+
+If the mask comprises two bytes, take the value as a sixteen-bits number, else take the value has an eight-bits value.
+
+    01011011 --> 00000000 01011011 (MSB LSB) 
+
+From the mask LSB, count how many bits we need to shift to the left:
+
+    01111000 --> 3 bits
+    
+Shit the value:    
+
+    0000000001011011 << 3 --> 0000001011011000   
+
+Get the sysex LSB:
+    
+    0000001011011000 & 01111000 = 01011000
+
+How many bits has gone into the sysex_lsb?:
+                
+    LSB_bits = 7 - 3 = 4
+
+Discard, from the original value, this number of bits used for the sysex LSB:
+     
+    0000000001011011 >>> 4 --> 0000000000000101  
+
+Get the sysex MSB:     
+
+    0000000000000101 & 00000111 = 00000101 
+     
+We can now inject these sysex values into the sysex data:
+
+    first, reset the target bits to zero with the inverted masks:     
+     
+    sysex MSB: sysex_data[offset]   = sysex_data[offset]   & 11111000   
+    sysex LSB: sysex_data[offset+1] = sysex_data[offset+1] | 10000111
+     
+    then inject the value bits: 
+     
+    sysex MSB: sysex_data[offset]   = sysex_data[offset]   | 00000101   
+    sysex LSB: sysex_data[offset+1] = sysex_data[offset+1] | 01011000
+                                                             
 
 # MIDI resources
 
