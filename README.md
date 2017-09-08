@@ -124,15 +124,25 @@ By default, the Bass Station II send 154 bytes. However, a patch (.syx file) may
 |    108 |     2 | `07 78`    | `00000111 01111000` |    7 | VCA Limit |
 |    137 |    16 | 16x `0x7F`  | 16x `01111111` | 16x 8 | Patch name (16 ASCII chars) |
  
-#### Notes:
+### Multi-bytes values:
  
 For multiple bytes value:
 
 - The first byte in the dump is the MSB, _**M**ost **S**ignificant **B**yte_. 
-- The second byte in the dump is the LSB, _**LM**east **S**ignificant **B**yte_.
+- The second byte in the dump is the LSB, _**L**east **S**ignificant **B**yte_.
 - The _msb_ (most significant __bit__) of any byte is always **0**. 
  
-## Example
+### Notes:
+
+Some bytes seem to always have the same value. This is confirmed accross all patch I could get.
+
+- byte 05 is always 0x33
+- bytes 30..35 are always 0x01 0x00 0x43 0x40 0x20 0x00
+- byte 96 is always 0x40
+- byte 104 is always 0x40
+
+
+## SysEx example
         
 BS II SysEx Message in decimal:    
     
@@ -237,7 +247,20 @@ We can now inject these sysex values into the sysex data:
      
     sysex MSB: sysex_data[offset]   = sysex_data[offset]   | 00000101   
     sysex LSB: sysex_data[offset+1] = sysex_data[offset+1] | 01011000
+
                                                              
+# Init patch
+
+    $ xxd -g 1 factory-patches/70-127_INIT\ PATCH.syx
+    0000000: f0 00 20 29 00 33 00 00 00 00 00 00 00 00 01 00  .. ).3..........
+    0000010: 4c 00 00 48 04 04 02 00 02 20 10 10 08 00 01 00  L..H..... ......
+    0000020: 43 40 20 00 03 7f 7c 00 00 00 00 00 0f 78 00 00  C@ ...|......x..
+    0000030: 08 20 00 00 07 78 00 00 40 00 00 0f 70 00 00 00  . ...x..@...p...
+    0000040: 00 00 12 63 10 00 00 00 00 1a 06 20 20 20 04 00  ...c.......   ..
+    0000050: 1f 19 10 09 24 02 01 14 40 20 20 10 08 02 01 00  ....$...@  .....
+    0000060: 40 40 10 08 04 02 01 00 40 20 00 00 00 03 10 00  @@......@ ......
+    0000070: 00 00 00 00 00 00 00 00 00 f7                    ..........
+
 
 # MIDI resources
 
