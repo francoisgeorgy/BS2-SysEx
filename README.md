@@ -86,7 +86,7 @@ By default, the Bass Station II send 154 bytes. However, a patch (.syx file) may
 |     64 |     1 | `7F   `    | `01111111         ` |    7 | LFO1 Delay |
 |     65 |     2 | `3F 40`    | `00111111 01000000` |    7 | LFO1 Slew |
 |     66 |     2 | `3F 60`    | `00111111 01100000` |    8 | LFO1 Speed |
-|     67 |     2 | `07 E0`    | `00000111 11100000` |    6 | LFO1 Sync Value |
+|     67 |     2 | `07 70`    | `00000111 01110000` |    6 | LFO1 Sync Value |
 |     69 |     1 | `08   `    | `00001000         ` |    1 | LFO1 Speed/Sync |
 |     69 |     1 | `10   `    | `00010000         ` |    1 | LFO1 Key Sync |
 |     70 |     2 | `01 7E`    | `00000001 01111110` |    7 | LFO2 Delay |
