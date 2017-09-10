@@ -45,6 +45,7 @@ By default, the Bass Station II send 154 bytes. However, a patch (.syx file) may
 |      1 |     3 | `7F 7F 7F` | `01111111 01111111 01111111` | 3x 8 | Manufacturer ID |
 |      9 |     1 | `7F`       | `01111111         ` |    8 | Patch number |
 |     13 |     2 | `03 7C`    | `00000011 01111100` |    7 | Portamento Time |
+|     15 |     1 | `7E   `    | `01111110         ` |    7 | ? |
 |     16 |     1 | `7F   `    | `01111111         ` |    7 | Osc Pitch Bend Range |
 |     18 |     1 | `40   `    | `01000000         ` |    1 | Osc 1-2 Sync |
 |     19 |     1 | `60   `    | `01100000         ` |    2 | Osc 1 Waveform |
@@ -58,8 +59,8 @@ By default, the Bass Station II send 154 bytes. However, a patch (.syx file) may
 |     27 |     2 | `1F 70`    | `00011111 01110000` |    8 | Osc 2 Coarse |
 |     28 |     2 | `0F 78`    | `00001111 01111000` |    8 | Osc 2 Fine |
 |     36 |     1 | `30   `    | `00110000         ` |    2 | Sub Osc Wave |
-|     37 |     2 | `07 7C`    | `00000111 01111100` |    8 | Mixer Osc 1 Level |
 |     37 |     1 | `08   `    | `00001000         ` |    1 | Sub Osc Oct |
+|     37 |     2 | `07 7C`    | `00000111 01111100` |    8 | Mixer Osc 1 Level |
 |     38 |     2 | `03 7E`    | `00000011 01111110` |    8 | Mixer Osc 2 Level |
 |     39 |     2 | `01 7F`    | `00000001 01111111` |    8 | Mixer Sub Osc Level |
 |     41 |     2 | `7F 40`    | `01111111 01000000` |    8 | Mixer Noise Level |
@@ -68,8 +69,8 @@ By default, the Bass Station II send 154 bytes. However, a patch (.syx file) may
 |     44 |     2 | `0F 78`    | `00001111 01111000` |    8 | Filter Frequency |
 |     45 |     2 | `03 7C`    | `00000011 01111100` |    7 | Filter Resonance |
 |     46 |     2 | `01 7E`    | `00000001 01111110` |    7 | Filter Overdrive |
-|     48 |     1 | `04   `    | `00000100         ` |    1 | Filter Type |
 |     48 |     1 | `08   `    | `00001000         ` |    1 | Filter Slope |
+|     48 |     1 | `04   `    | `00000100         ` |    1 | Filter Type |
 |     49 |     2 | `3F 40`    | `00111111 01000000` |    7 | Velocity Amp Env |
 |     50 |     2 | `1F 60`    | `00011111 01100000` |    7 | Amp Env Attack |
 |     51 |     2 | `0F 70`    | `00001111 01110000` |    7 | Amp Env Decay |
@@ -182,71 +183,71 @@ Let's decode the _Osc 1 Range_ value. The definition is:
 Take bytes 20 and 21 from the above example: 
 
     hex: 48 04
-    bin: 01001000 01001000
+    bin: 01001000 00000100
 
 Apply masks:
 
-    bin:  01001000 01001000
+    bin:  01001000 00000100
     mask: 00000111 01111000
           -----------------
-               000 01001
+               000 00000
 
 Value:
 
-    value: 00001001 (bin) == 9 (dec)
+    value: 00000000 (bin) == 0 (dec)
 
 
 ## Encoding example
 
-Let's encode the _Osc 1 Range_ value. The definition is:
+Let's encode the _Osc 1 Coarse_ value. The definition is:
 
-| Offset | Bytes | Hex mask | Bin mask            | Bits | Description |
-| ------:| -----:| :------- | :------------------ | ----:| ----------- |
-|     20 |     2 | `07 78`  | `00000111 01111000` |    7 | Osc 1 Range |
+| Offset | Bytes | Hex mask | Bin mask            | Bits | Description  |
+| ------:| -----:| :------- | :------------------ | ----:| ------------ |
+|     21 |     2 | `07 7C`  | `00000111 01111100` |    8 | Osc 1 Coarse |
 
 The value we want to encode is 91:
  
     91 (dec) == 01011011 (bin) 
 
-If the mask comprises two bytes, take the value as a sixteen-bits number, else take the value has an eight-bits value.
+If the mask comprises two bytes, convert the value to encode to a sixteen-bits number, else take the value has an eight-bits value.
 
     01011011 --> 00000000 01011011 (MSB LSB) 
 
 From the mask LSB, count how many bits we need to shift to the left:
 
-    01111000 --> 3 bits
+    01111100 --> 2 bits
     
 Shit the value:    
 
-    0000000001011011 << 3 --> 0000001011011000   
+    0000000001011011 << 2 --> 0000000101101100   
 
 Get the sysex LSB:
     
-    0000001011011000 & 01111000 = 01011000
+    0000000101101100 & 01111100 = 1101100
 
 How many bits has gone into the sysex_lsb?:
                 
-    LSB_bits = 7 - 3 = 4
+    LSB_bits = 7 - 2 = 5
 
 Discard, from the original value, this number of bits used for the sysex LSB:
      
-    0000000001011011 >>> 4 --> 0000000000000101  
+    0000000001011011 >>> 5 --> 0000000000000010  
 
 Get the sysex MSB:     
 
-    0000000000000101 & 00000111 = 00000101 
+    0000000000000010 & 00000111 = 00000010 
      
 We can now inject these sysex values into the sysex data:
 
     first, reset the target bits to zero with the inverted masks:     
      
     sysex MSB: sysex_data[offset]   = sysex_data[offset]   & 11111000   
-    sysex LSB: sysex_data[offset+1] = sysex_data[offset+1] | 10000111
+    sysex LSB: sysex_data[offset+1] = sysex_data[offset+1] & 10000011
      
     then inject the value bits: 
      
-    sysex MSB: sysex_data[offset]   = sysex_data[offset]   | 00000101   
-    sysex LSB: sysex_data[offset+1] = sysex_data[offset+1] | 01011000
+    sysex MSB: sysex_data[offset]   = sysex_data[offset]   | 00000010   
+    sysex LSB: sysex_data[offset+1] = sysex_data[offset+1] | 01101100
 
                                                              
 # Init patch
