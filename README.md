@@ -125,13 +125,42 @@ By default, the Bass Station II send 154 bytes. However, a patch (.syx file) may
 |    108 |     2 | `07 78`    | `00000111 01111000` |    7 | VCA Limit |
 |    137 |    16 | 16x `0x7F`  | 16x `01111111` | 16x 8 | Patch name (16 ASCII chars) |
  
-### Multi-bytes values:
- 
-For multiple bytes value:
+### Two-bytes values
 
+Some parameters use two bytes to increase the value range from 0..127 to 0..255. 
+
+#### Two-bytes values in SysEx dump:
+ 
 - The first byte in the dump is the MSB, _**M**ost **S**ignificant **B**yte_. 
 - The second byte in the dump is the LSB, _**L**east **S**ignificant **B**yte_.
 - The _msb_ (most significant __bit__) of any byte is always **0**. 
+ 
+#### Two-bytes values in MIDI messages: 
+ 
+##### Sending:
+
+Value = `201`. In binary : `11001001`
+
+1. The seven _most significants_ bits are `1100100`. Left-pad them to form a byte: `01100100` = `100`. This will be the first byte to send.
+2. The _least significant_ bit is `1`. We left-shift it by 6 positions : `01000000` = `64`. This will be the second byte so send.
+
+In summary:
+
+    byte1 = integer part of value/2
+    byte2 = 0 if value is even, 64 if value is odd
+
+##### Receiving:
+
+We receive two bytes: `01100100` and `01000000`
+
+1. Left-shift byte 1 by one position: `01100100 << 1 = 11001000`
+2. Right-shift byte 2 by 6 position:  `01000000 >>> 6 = 00000001`
+3. Add them: `11001000 + 00000001 = 11001001 = 201`
+
+In summary:
+
+    value = byte1*2 + byte2/64
+
  
 ### Notes:
 
