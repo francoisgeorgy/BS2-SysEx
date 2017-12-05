@@ -71,6 +71,7 @@ By default, the Bass Station II send 154 bytes. However, a patch (.syx file) may
 |     46 |     2 | `01 7E`    | `00000001 01111110` |    7 | Filter Overdrive |
 |     48 |     1 | `08   `    | `00001000         ` |    1 | Filter Slope |
 |     48 |     1 | `04   `    | `00000100         ` |    1 | Filter Type |
+|     48 |     1 | `03   `    | `00000011         ` |    2 | Filter Shape |
 |     49 |     2 | `3F 40`    | `00111111 01000000` |    7 | Velocity Amp Env |
 |     50 |     2 | `1F 60`    | `00011111 01100000` |    7 | Amp Env Attack |
 |     51 |     2 | `0F 70`    | `00001111 01110000` |    7 | Amp Env Decay |
@@ -114,7 +115,7 @@ By default, the Bass Station II send 154 bytes. However, a patch (.syx file) may
 |     91 |     2 | `1F 70`    | `00011111 01110000` |    8 | Osc2 LFO1 Depth |
 |     93 |     2 | `03 7C`    | `00000011 01111100` |    7 | Osc1 LFO2 PW Mod |
 |     94 |     2 | `01 7E`    | `00000001 01111110` |    7 | Osc2 LFO2 PW Mod |
-|     97 |     2 | `7F 40`    | `01111111 01000000` |    7 | Filter LFO2 Depth |
+|     97 |     2 | `7F 40`    | `01111111 01000000` |    8 | Filter LFO2 Depth |
 |     98 |     2 | `1F 60`    | `00011111 01100000` |    7 | Osc1 Mod Env Depth |
 |     99 |     2 | `0F 70`    | `00001111 01110000` |    7 | Osc2 Mod Env Depth |
 |    101 |     2 | `01 7C`    | `00000001 01111100` |    6 | Osc1 Mod Env PW Mod |
