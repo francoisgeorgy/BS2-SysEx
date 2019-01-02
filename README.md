@@ -124,6 +124,12 @@ By default, the Bass Station II send 154 bytes. However, a patch (.syx file) may
 |    106 |     2 | `1F 60`    | `00011111 01100000` |    7 | Fx Osc Filter Mod |
 |    107 |     2 | `0F 70`    | `00001111 01110000` |    7 | Fx Distortion |
 |    108 |     2 | `07 78`    | `00000111 01111000` |    7 | VCA Limit |
+|    111 |     1 | `02`       | `00000010`          |    1 | Paraphonic Off (0) / On (1) |
+|    112 |     1 | `07`       | `00000111`          |    3 | Filter tracking |
+|    114 |     1 | `40`       | `01000000`          |    1 | Amp Env Retriggering |
+|    115 |     1 | `20`       | `00100000`          |    1 | Mod Env Retriggering |
+|    115 |     2 | `01 70`    | `00000001 01110000` |    4 | Tuning table |
+|    117 |     1 | `38`       | `00111000`          |    3 | Osc Error |
 |    137 |    16 | 16x `0x7F`  | 16x `01111111` | 16x 8 | Patch name (16 ASCII chars) |
  
 ### Two-bytes values
